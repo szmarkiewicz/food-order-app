@@ -4,7 +4,7 @@ interface MealProps {
   meal: Meal;
 }
 
-export default function Meal(props: MealProps){
+export default function MealItem(props: MealProps){
   const { meal } = props;
 
   return (

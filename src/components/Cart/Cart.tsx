@@ -2,7 +2,7 @@ import useCart from "../../hooks/useCart";
 import CartItem from "./CartItem";
 
 interface CartProps {
-
+  show?: boolean;
 }
 
 export default function Cart(props: CartProps){
@@ -11,7 +11,7 @@ export default function Cart(props: CartProps){
     return (
         <div className='cart'>
             <ul className='cart--item-list'>
-                {meals.map((meal, index) => <CartItem item={meal} listNo={index+1} />)}
+                {meals.map((meal, index) => <CartItem item={meal} noOnList={index+1} />)}
             </ul>
         </div>
     );

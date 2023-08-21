@@ -1,5 +1,5 @@
 import {Meal} from "../../resources/types";
-import MealItem from "./Meal";
+import MealItem from "./MealItem";
 
 interface MealsListProps {
   meals: Meal[];

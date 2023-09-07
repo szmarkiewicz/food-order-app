@@ -1,22 +1,23 @@
-import {CartItemType} from "../../resources/types";
-import {MOCK_MEALS as meals} from "../../resources/constants";
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
+import {CartItem, Meal} from "../../resources/types";
+import useMeals from "../../hooks/useMeals";
 
 interface CartItemProps {
-    item: CartItemType;
+    item: CartItem;
     noOnList: number;
 }
 
-const getMeal = (id: string) => {
+const getMeal = (meals: Meal[], id: string) => {
     return meals.find((meal) => meal.id === id);
 };
 
-export default function CartItem(props: CartItemProps){
+export default function CartItemComponent(props: CartItemProps){
     const { item, noOnList } = props;
+    const { meals } = useMeals();
 
     const fetchMeal = useCallback(getMeal, [item.id]);
 
-    const meal = fetchMeal(item.id);
+    const meal = fetchMeal(meals, item.id);
 
     if (meal) {
       return (<li className='cart-item' key={noOnList}>

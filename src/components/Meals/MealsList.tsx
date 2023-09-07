@@ -1,12 +1,8 @@
-import {Meal} from "../../resources/types";
 import MealItem from "./MealItem";
+import useMeals from "../../hooks/useMeals";
 
-interface MealsListProps {
-  meals: Meal[];
-}
-
-export default function MealsList(props: MealsListProps){
-  const { meals } = props;
+export default function MealsList(){
+  const { meals } = useMeals();
 
   return (
     <ul className="meals-list">

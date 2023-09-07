@@ -6,12 +6,12 @@ interface CartProps {
 }
 
 export default function Cart(props: CartProps){
-    const { addMeal, removeMeal, mealsNo, meals, totalValue } = useCart();
+    const { addCartItem, removeCartItem, reset, cartItems, totalValue } = useCart();
 
     return (
         <div className='cart'>
             <ul className='cart--item-list'>
-                {meals.map((meal, index) => <CartItem item={meal} noOnList={index+1} />)}
+                {cartItems.map((cartItem, index) => <CartItem item={cartItem} noOnList={index+1} />)}
             </ul>
         </div>
     );

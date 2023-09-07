@@ -1,20 +1,15 @@
-export interface Meal {
-  id: string;
+export interface MealDTO {
   name: string;
   description: string;
   price: number;
   image: string;
 }
 
-export interface CartItemType {
+export interface Meal extends MealDTO {
   id: string;
-  count: number;
 }
 
-export interface CartUtilities {
-  removeMeal: (itemId: string, count: number) => void;
-  addMeal: (itemId: string, count: number) => void;
-  meals: CartItemType[];
-  totalValue: number;
-  mealsNo: number;
+export interface CartItem {
+  id: string;
+  count: number;
 }

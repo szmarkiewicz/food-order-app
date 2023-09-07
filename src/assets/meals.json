@@ -1,30 +1,28 @@
-[
-  {
-    "id": "m1",
-    "name": "Sushi",
-    "description": "Finest fish and veggies",
-    "price": 22.99,
-    "image": ""
-  },
-  {
-    "id": "m2",
-    "name": "Schnitzel",
-    "description": "A german specialty!",
-    "price": 16.5,
-    "image": ""
-  },
-  {
-    "id": "m3",
-    "name": "Barbecue Burger",
-    "description": "American, raw, meaty",
-    "price": 12.99,
-    "image": ""
-  },
-  {
-    "id": "m4",
-    "name": "Green Bowl",
-    "description": "Healthy... and green...",
-    "price": 18.99,
-    "image": ""
-  }
-]
+{
+  "meals": [
+    {
+      "name": "Sushi",
+      "description": "Finest fish and veggies",
+      "price": 22.99,
+      "image": "https://w7.pngwing.com/pngs/689/484/png-transparent-sushi-japanese-cuisine-sashimi-makizushi-tempura-sushi-food-recipe-sashimi-thumbnail.png"
+    },
+    {
+      "name": "Schnitzel",
+      "description": "A german specialty!",
+      "price": 16.5,
+      "image": "https://e7.pngegg.com/pngimages/340/1021/png-clipart-schnitzel-schnitzel-thumbnail.png"
+    },
+    {
+      "name": "Barbecue Burger",
+      "description": "American, raw, meaty",
+      "price": 12.99,
+      "image": "https://w7.pngwing.com/pngs/369/24/png-transparent-hamburger-chicken-sandwich-veggie-burger-fast-food-burger-king-food-recipe-fast-food-restaurant.png"
+    },
+    {
+      "name": "Green Bowl",
+      "description": "Healthy... and green...",
+      "price": 18.99,
+      "image": "https://static.vecteezy.com/system/resources/previews/022/536/499/original/poke-bowl-isolated-png.png"
+    }
+  ]
+}

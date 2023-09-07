@@ -1,5 +1,5 @@
 import {DEBUG} from "../resources/constants";
 
-export default function log(data: any){
+export default function logEvent(data: any){
   return DEBUG && console.log(data);
 }

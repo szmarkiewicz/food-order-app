@@ -1,17 +1,11 @@
-import {ReactNode, Reducer, useReducer} from 'react';
-
+import {PropsWithChildren, useReducer} from 'react';
 import CartContextInstance, {CartContext} from './CartContext';
-import {MOCK_MEALS as meals} from "../resources/constants";
-
-
-export interface CartItemState {
-    id: string,
-    count: number
-}
+import {Meal, CartItem} from "../../resources/types";
 
 interface CartState {
-    items: CartItemState[],
-    totalValue: number
+    cartItems: CartItem[],
+    totalValue: number,
+    cartItemsNo: 0,
 }
 
 enum CartActionType {
@@ -21,66 +15,65 @@ enum CartActionType {
 }
 
 interface CartActionPayload {
-    id: string,
-    count?: number
+    meal: Meal;
+    count: number;
 }
 
 type CartAction =
   | { type: CartActionType.ADD | CartActionType.REMOVE, payload: CartActionPayload }
   | { type: CartActionType.RESET }
 
-interface CartProviderProps {
-    children: ReactNode;
-}
+interface CartProviderProps extends PropsWithChildren {}
 
 const initialCartState: CartState = {
-    items: [],
+    cartItems: [],
     totalValue: 0,
+    cartItemsNo: 0,
 };
 
 const initCart = () => {
     return initialCartState;
-}
+};
 
-const findCartItem = (cartState: CartState, id: string) => {
-    const index = cartState.items.findIndex(
+const findMealInCart = (cartState: CartState, id: string) => {
+    const index = cartState.cartItems.findIndex(
         (item) => item.id === id
     );
 
-    const item = cartState.items.at(index);
+    const cartItem = cartState.cartItems.at(index);
 
     return {
-        item,
+        cartItem,
         index
     };
 }
 
-const getMealPrice = (id: string) => {
+const getMealPrice = (meals: Meal[], id: string) => {
     const meal = meals.find((meal) => meal.id === id);
     if (meal) return meal.price;
     return 0;
 }
 
-const cartReducer: Reducer<CartState, CartAction> = (prevState: CartState, action: CartAction) => {
+const cartReducer = (prevState: CartState, action: CartAction) => {
     switch (action.type) {
         case CartActionType.ADD:{
             if (!action?.payload)
                 return prevState;
 
-            const { id, count } = action?.payload;
-            const { item, index } = findCartItem(prevState, id);
+            const { meal, count } = action.payload;
+            const { cartItem, index } = findMealInCart(prevState, meal.id);
 
-            if (count && count > 0 && item){
+            if (count > 0 && cartItem && index){
                 if (index === -1){
-                    prevState.items.push({
-                        id: id,
+                    prevState.cartItems.push({
+                        id: meal.id,
                         count: count
                     });
                 } else{
-                    item.count += count;
+                    cartItem.count += count;
                 }
 
-                prevState.totalValue += count * getMealPrice(id);
+                prevState.totalValue += count * meal.price;
             }
 
             return prevState;
@@ -89,17 +82,17 @@ const cartReducer: Reducer<CartState, CartAction> = (prevState: CartState, actio
             if (!action?.payload)
                 return prevState;
 
-            const { id, count } = action?.payload;
-            const {item, index} = findCartItem(prevState, id);
+            const { meal, count } = action.payload;
+            const { cartItem, index} = findMealInCart(prevState, meal.id);
 
-            if (count && count > 0 && item && count <= item?.count && index !== -1){
-                item.count -= count;
+            if (index !== -1 && cartItem && count > 0 && count <= cartItem?.count){
+                cartItem.count -= count;
 
-                if (item.count === 0){
-                    prevState.items.splice(index, 1);
+                if (cartItem.count === 0){
+                    prevState.cartItems.splice(index, 1);
                 }
 
-                prevState.totalValue -= count * getMealPrice(id);
+                prevState.totalValue -= count * meal.price;
             }
 
             return prevState;
@@ -120,16 +113,16 @@ const CartProvider = (props: CartProviderProps) => {
         initCart
     );
 
-    const addItemToCartHandler = (itemId: string, count: number) => {
+    const addItemToCartHandler = (meal: Meal, count: number) => {
         dispatchCartAction({ type: CartActionType.ADD, payload: {
-                id: itemId,
+                meal: meal,
                 count: count
             } });
     };
 
-    const removeItemFromCartHandler = (itemId: string, count: number) => {
+    const removeItemFromCartHandler = (meal: Meal, count: number) => {
         dispatchCartAction({ type: CartActionType.REMOVE, payload: {
-                id: itemId,
+                meal: meal,
                 count: count
             } });
     };
@@ -139,10 +132,11 @@ const CartProvider = (props: CartProviderProps) => {
     }
 
     const cartContext: CartContext = {
-        items: cartState.items,
+        cartItems: cartState.cartItems,
         totalValue: cartState.totalValue,
-        addItem: addItemToCartHandler,
-        removeItem: removeItemFromCartHandler,
+        cartItemsNo: cartState.cartItemsNo,
+        addCartItem: addItemToCartHandler,
+        removeCartItem: removeItemFromCartHandler,
         reset: resetCart,
     };
 

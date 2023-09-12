@@ -16,5 +16,5 @@ export default createContext<CartContext>({
     cartItemsNo: 0,
     addCartItem: () => {},
     removeCartItem: () => {},
-    reset: () => {}
+    reset: () => {},
 });

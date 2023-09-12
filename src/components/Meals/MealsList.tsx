@@ -7,7 +7,7 @@ export default function MealsList(){
   return (
     <ul className="meals-list">
       {meals.map((mealItem) => {
-        return <MealItem meal={mealItem} />
+        return <MealItem meal={mealItem} key={mealItem.id}/>
       })}
     </ul>
   );

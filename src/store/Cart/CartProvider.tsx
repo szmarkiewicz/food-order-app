@@ -1,6 +1,7 @@
-import {PropsWithChildren, useReducer} from 'react';
+import {PropsWithChildren, useEffect, useMemo, useReducer} from 'react';
 import CartContextInstance, {CartContext} from './CartContext';
 import {Meal, CartItem} from "../../resources/types";
+import logEvent from "../../utils/logger";
 
 interface CartState {
     cartItems: CartItem[],
@@ -31,9 +32,11 @@ const initialCartState: CartState = {
     cartItemsNo: 0,
 };
 
-const initCart = () => {
-    return initialCartState;
-};
+const initCart = () => ({
+    cartItems: [],
+    totalValue: 0,
+    cartItemsNo: 0,
+}) as CartState;
 
 const findMealInCart = (cartState: CartState, id: string) => {
     const index = cartState.cartItems.findIndex(
@@ -57,23 +60,31 @@ const getMealPrice = (meals: Meal[], id: string) => {
 const cartReducer = (prevState: CartState, action: CartAction) => {
     switch (action.type) {
         case CartActionType.ADD:{
-            if (!action?.payload)
+            if (!action?.payload.meal || action.payload.count < 1)
                 return prevState;
 
             const { meal, count } = action.payload;
             const { cartItem, index } = findMealInCart(prevState, meal.id);
 
-            if (count > 0 && cartItem && index){
-                if (index === -1){
-                    prevState.cartItems.push({
+            if (meal && count > 0){
+                let newCartState: CartState = {
+                    ...prevState
+                };
+
+                if (cartItem && index > -1){
+                    newCartState.cartItems[index].count += count;
+                } else{
+                    newCartState.cartItems.push({
                         id: meal.id,
                         count: count
                     });
-                } else{
-                    cartItem.count += count;
                 }
 
-                prevState.totalValue += count * meal.price;
+                newCartState.totalValue += count * meal.price;
+                newCartState.cartItemsNo += count;
+
+                console.log(newCartState);
+                return newCartState;
             }
 
             return prevState;
@@ -85,14 +96,23 @@ const cartReducer = (prevState: CartState, action: CartAction) => {
             const { meal, count } = action.payload;
             const { cartItem, index} = findMealInCart(prevState, meal.id);
 
-            if (index !== -1 && cartItem && count > 0 && count <= cartItem?.count){
-                cartItem.count -= count;
+            if (meal && count > 0 && cartItem && index > -1 && cartItem.count - count >= 0){
+                let newCartState: CartState = {
+                    ...prevState
+                };
 
-                if (cartItem.count === 0){
-                    prevState.cartItems.splice(index, 1);
+                if (cartItem.count - count === 0){
+                    newCartState.cartItems.splice(index, 1);
+                } else {
+                    newCartState.cartItems[index].count -= count;
                 }
 
-                prevState.totalValue -= count * meal.price;
+                newCartState.totalValue -= count * meal.price;
+                newCartState.cartItemsNo -= count;
+
+                console.log(newCartState);
+
+                return newCartState;
             }
 
             return prevState;
@@ -131,17 +151,17 @@ const CartProvider = (props: CartProviderProps) => {
         dispatchCartAction({type: CartActionType.RESET});
     }
 
-    const cartContext: CartContext = {
+    const cartContextValue: CartContext = useMemo(() => ({
         cartItems: cartState.cartItems,
         totalValue: cartState.totalValue,
         cartItemsNo: cartState.cartItemsNo,
         addCartItem: addItemToCartHandler,
         removeCartItem: removeItemFromCartHandler,
         reset: resetCart,
-    };
+    }), [cartState]);
 
     return (
-        <CartContextInstance.Provider value={cartContext}>
+        <CartContextInstance.Provider value={cartContextValue}>
             {props.children}
         </CartContextInstance.Provider>
     );

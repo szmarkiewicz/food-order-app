@@ -4,9 +4,17 @@
 .card {
   border-radius: shared.$card--border-radius;
   box-shadow: 0 0 4px 0 black;
-  height: 100px;
-  width: 100px;
+  min-height: 100px;
+  min-width: 100px;
+  height: auto;
+  width: auto;
   text-align: center;
   padding: 1rem;
 
+  &.elevation--high {
+    box-shadow: 0 0 16px 0 black;
+  }
+
 }
+
+

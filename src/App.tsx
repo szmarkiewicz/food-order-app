@@ -5,6 +5,7 @@ import Cart from "./components/Cart/Cart";
 import MealsList from "./components/Meals/MealsList";
 import Info from "./components/Info/Info";
 import MealsProvider from "./store/Meals/MealsProvider";
+import Checkout from "./components/Checkout/Checkout";
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Cart />
                 <Info />
                 <MealsList/>
+                <Checkout />
             </CartProvider>
         </MealsProvider>
     );
